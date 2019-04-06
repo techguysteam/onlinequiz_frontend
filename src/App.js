@@ -24,11 +24,7 @@ import FormExam from './components/admin/examManagement/FormExam';
 
 window.jQuery = window.$ = $;
 
-export const endPointRoot = 'https://192.168.0.110:45456';
-
-axios.get('https://192.168.0.110:45456/api/values')
-.then(res => console.log(res))
-.catch(err => console.log(err));
+export const endPointRoot = 'http://192.168.0.110:45455';
 
 class App extends Component {
   render() {

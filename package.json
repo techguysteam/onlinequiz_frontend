@@ -17,7 +17,8 @@
     "react-scripts": "2.1.8",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.2.0",
+    "sweetalert2": "^8.8.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -33,6 +34,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "proxy": "https://192.168.0.110:45456"
+  ]
 }

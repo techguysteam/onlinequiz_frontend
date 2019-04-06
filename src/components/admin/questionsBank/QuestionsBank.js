@@ -4,6 +4,8 @@ import Header from '../header/Header';
 import AppNavbar from '../../common/navbar/AppNavbar';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { endPointRoot } from '../../../App';
+import Swal from 'sweetalert2';
 
 class QuestionsBank extends React.Component {
     constructor(props) {
@@ -18,7 +20,9 @@ class QuestionsBank extends React.Component {
     }
 
     getQuestions = async () => {
-        const res = await axios.post('/api/questions')
+        const url = endPointRoot + '/api/questions';
+        const res = await axios.get(url)
+        console.log(res.data.data);
         this.setState({ questions: res.data.data })
     }
 
@@ -30,6 +34,11 @@ class QuestionsBank extends React.Component {
                 let { success } = res.data;
                 if(success){
                     alert('Xoa thanh cong');
+                    // Swal.fire({
+                    //     type: 'success',
+                    //     toast: true,
+                    //     text: 'Xoa thanh cong',
+                    // })
                     this.getQuestions();
                 }
             })
@@ -56,8 +65,8 @@ class QuestionsBank extends React.Component {
                         questions.map((q, index) => (
                             <tr key={q.id}>
                                 <td>{ index + 1 }</td>
-                                <td>{ q.questionContent }</td>
-                                <td>{ q.correctAnswer }</td>
+                                <td>{ q.content }</td>
+                                <td>{ q.answer }</td>
                                 <td>{ q.a }</td>
                                 <td>{ q.b }</td>
                                 <td>{ q.c }</td>

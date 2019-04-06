@@ -4,6 +4,7 @@ import Header from '../header/Header';
 import AppNavbar from '../../common/navbar/AppNavbar';
 import axios from 'axios';
 import { endPointRoot } from '../../../App';
+import Swal from 'sweetalert2';
 
 class EditQuestion extends React.Component {
     constructor(props) {
@@ -55,13 +56,16 @@ class EditQuestion extends React.Component {
         let filename = input.value;
         if(this.isValidFileExtension(filename)){
             formData.append('file', input.files[0]);
-            const { question } = this.state;
-            Object.keys(question).forEach(key => {
-                formData.append(key, question[key])
-            })
-            let url = endPointRoot + '/api/questions';
-            this.makeRequest(url, formData);
         }
+        const { questionContent, a, b, c, d, correctAnswer } = this.state.question;
+        formData.append('content', questionContent);
+        formData.append('a', a);
+        formData.append('b', b);
+        formData.append('c', c);
+        formData.append('d', d);
+        formData.append('answer', correctAnswer);
+        let url = endPointRoot + '/api/questions';
+        this.makeRequest(url, formData);
     }
 
     makeRequest = (url, formData) => {
@@ -70,7 +74,27 @@ class EditQuestion extends React.Component {
             }
         )
         .then(res => {
-            console.log(res)
+            if(res.data.success) {
+                let alertMsg = '';
+                if(this.state.question.id){
+                    alertMsg = 'Cap nhat thanh cong!';
+                } else {
+                    alertMsg = 'Them thanh cong';
+                }
+
+                Swal.fire({
+                    position: 'top-end',
+                    type: 'success',
+                    toast: true,
+                    title: alertMsg,
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+                
+                setTimeout(() => {
+                    this.props.history.push('/admin/questions_bank');
+                }, 2000);
+            }
         })
         .catch(err => console.log(err));
     }

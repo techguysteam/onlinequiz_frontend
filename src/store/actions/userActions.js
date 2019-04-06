@@ -7,8 +7,13 @@ export function loginUser(user){
     console.log('login user');
     return function(dispatch){
         const url = endPointRoot + '/api/account/login';
-        axios.post(url, user)
+        axios.post(url, user, { withCredentials: false, headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          } })
         .then(res => {
+            console.log(res);
             dispatch(setUser(res.data));
         })
         .catch(err => {
