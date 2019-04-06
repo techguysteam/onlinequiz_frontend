@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { endPointRoot } from '../../../App';
+import axios from 'axios';
 
 const Wrapper = styled.div`
     .card-register{
@@ -31,7 +33,9 @@ const Wrapper = styled.div`
 class UserRegister extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            user: { username: '', password: '', address: '', mail: '', phone: '' }
+        };
     }
 
     componentDidMount = () => {
@@ -44,7 +48,35 @@ class UserRegister extends React.Component {
         $('body').removeClass('bg-register-gradient-body');
     }
 
+    onChange = e => {
+        const { name, value } = e.target;
+        let user = Object.assign({}, this.state.user);
+        user[name] = value;
+        this.setState({ user });
+    }
+
+    register = e => {
+        e.preventDefault();
+        const { user } = this.state;
+        const url = endPointRoot + '/api/account/register';
+        console.log(user);
+        axios.post(url, user)
+        .then(res => {
+            console.log(res);
+            if(res.data.success){
+                alert('Login successfully!');
+                setTimeout(() => {
+                    this.props.history.push('/user/login');
+                }, 2000);
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
     render() {
+        const { username, password, fullname, mail, phone, address } = this.state.user;
         return (
             <Wrapper>
                 <div className="container">
@@ -55,7 +87,7 @@ class UserRegister extends React.Component {
                                 <div className="logo">
                                     <i className="fas fa-book"></i>
                                 </div>
-                                <form className="mt-4">
+                                <form className="mt-4" onSubmit={this.register}>
                                     <div className="row">
                                         <div className="col-sm-6 pr-sm-2">
                                             <div className="form-group">
@@ -66,23 +98,40 @@ class UserRegister extends React.Component {
                                                             <i className="fas fa-user"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="text" className="form-control" id="txtUsername" placeholder="Nhập tên đăng nhập..."/>
+                                                    <input 
+                                                        type="text"
+                                                        className="form-control" 
+                                                        id="txtUsername" 
+                                                        placeholder="Nhập tên đăng nhập..."
+                                                        name="username"
+                                                        onChange={this.onChange}
+                                                        value={username}
+                                                     />
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="col-sm-6 pl-sm-2">
                                             <div className="form-group">
-                                                <label>Email</label>
+                                                <label htmlFor="txtRePassword">Ho ten</label>
                                                 <div className="input-group">
                                                     <div className="input-group-prepend">
                                                         <span className="input-group-text">
-                                                            <i className="fas fa-at"></i>
+                                                            <i className="fas fa-user"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="email" className="form-control" id="exampleInputEmail1" placeholder="Email..."/>
+                                                    <input 
+                                                        type="text" 
+                                                        className="form-control" 
+                                                        id="txtRePassword" 
+                                                        placeholder="Nhập ho ten..."
+                                                        name="fullname"
+                                                        onChange={this.onChange}
+                                                        value={fullname}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
+                                        
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-6 pr-sm-2">
@@ -94,7 +143,15 @@ class UserRegister extends React.Component {
                                                             <i className="fas fa-phone"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="text" className="form-control" id="txtPhoneNum" placeholder="Nhập số điện thoại..."/>
+                                                    <input 
+                                                        type="text" 
+                                                        className="form-control" 
+                                                        id="txtPhoneNum" 
+                                                        placeholder="Nhập số điện thoại..."
+                                                        name="phone"
+                                                        onChange={this.onChange}
+                                                        value={phone}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
@@ -107,12 +164,41 @@ class UserRegister extends React.Component {
                                                             <i className="fas fa-map-marker-alt"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="text" className="form-control" id="txtAddress" placeholder="Nhập địa chỉ..."/>
+                                                    <input 
+                                                        type="text" 
+                                                        className="form-control" 
+                                                        id="txtAddress" 
+                                                        placeholder="Nhập địa chỉ..."
+                                                        name="address"
+                                                        onChange={this.onChange}
+                                                        value={address}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="row">
+                                    <div className="col-sm-6 pl-sm-2">
+                                            <div className="form-group">
+                                                <label>Email</label>
+                                                <div className="input-group">
+                                                    <div className="input-group-prepend">
+                                                        <span className="input-group-text">
+                                                            <i className="fas fa-at"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input 
+                                                        type="email" 
+                                                        className="form-control" 
+                                                        id="exampleInputEmail1" 
+                                                        placeholder="Email..."
+                                                        name="mail"
+                                                        onChange={this.onChange}
+                                                        value={mail}
+                                                     />
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div className="col-sm-6 pr-sm-2">
                                             <div className="form-group">
                                                 <label htmlFor="txtPassword">Mật khẩu</label>
@@ -122,23 +208,19 @@ class UserRegister extends React.Component {
                                                             <i className="fas fa-lock"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="password" className="form-control" id="txtPassword" placeholder="Nhập mật khẩu..."/>
+                                                    <input 
+                                                        type="password" 
+                                                        className="form-control" 
+                                                        id="txtPassword" 
+                                                        placeholder="Nhập mật khẩu..."
+                                                        name="password"
+                                                        onChange={this.onChange}
+                                                        value={password}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-sm-6 pl-sm-2">
-                                            <div className="form-group">
-                                                <label htmlFor="txtRePassword">Nhập lại mật khẩu</label>
-                                                <div className="input-group">
-                                                    <div className="input-group-prepend">
-                                                        <span className="input-group-text">
-                                                            <i className="fas fa-lock"></i>
-                                                        </span>
-                                                    </div>
-                                                    <input type="password" className="form-control" id="txtRePassword" placeholder="Nhập lại mật khẩu..."/>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                     
                                     <button type="submit" className="btn btn-outline-success float-right">Đăng kí</button>

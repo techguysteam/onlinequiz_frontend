@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginUser } from '../../../store/actions/userActions';
 
@@ -40,6 +40,12 @@ class LoginUser extends React.Component {
     componentDidMount = () => {
         const $ = window.$;
         $('body').addClass('bg-login-gradient-body');
+    }
+
+    componentWillReceiveProps = (nextProps) => {
+        if(nextProps.user.isAuthenticated){
+            this.props.history.push('/user');
+        }
     }
 
     componentWillUnmount = () => {
@@ -125,7 +131,12 @@ class LoginUser extends React.Component {
 }
 
 LoginUser.propTypes = {
-    loginUser: PropTypes.func.isRequired
+    loginUser: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
 };
 
-export default connect(null, { loginUser })(LoginUser);
+const mapStateToProps = state => ({
+    user: state.user
+})
+
+export default connect(mapStateToProps, { loginUser })( withRouter(LoginUser) );

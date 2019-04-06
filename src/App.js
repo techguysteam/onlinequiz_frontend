@@ -14,7 +14,7 @@ import UserRegister from './components/user/register/UserRegister';
 import TestOnline from './components/user/testOnline/TestOnline';
 import FinishTest from './components/user/finishTest/FinishTest';
 import LoginUser from './components/user/login/LoginUser';
-import AdminPage from './components/admin/index/IndexAdmin';
+
 import CandidateManagement from './components/admin/candidateManagement/CandidateManagement';
 import ExamManagement from './components/admin/examManagement/ExamManagement';
 import TestManagement from './components/admin/testManagement/TestManagement';
@@ -23,6 +23,8 @@ import FormQuestion from './components/admin/questionsBank/FormQuestion';
 import FormExam from './components/admin/examManagement/FormExam';
 
 window.jQuery = window.$ = $;
+
+export const endPointRoot = 'https://192.168.0.110:45456';
 
 axios.get('https://192.168.0.110:45456/api/values')
 .then(res => console.log(res))

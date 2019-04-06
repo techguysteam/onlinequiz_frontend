@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Header from '../header/Header';
 import AppNavbar from '../../common/navbar/AppNavbar';
 import axios from 'axios';
+import { endPointRoot } from '../../../App';
 
 class EditQuestion extends React.Component {
     constructor(props) {
@@ -58,9 +59,7 @@ class EditQuestion extends React.Component {
             Object.keys(question).forEach(key => {
                 formData.append(key, question[key])
             })
-            let url = '/api/add_question';
-            if(question.id) url = '/api/update_question';
-                
+            let url = endPointRoot + '/api/questions';
             this.makeRequest(url, formData);
         }
     }

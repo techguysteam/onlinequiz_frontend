@@ -28,7 +28,7 @@ class ExamManagement extends React.Component {
                                             </h4>
                                     </div>
                                     <div className="col-4">
-                                        <Link className="btn btn-custom float-right" to="/admin">Tạo đề thi mới</Link>
+                                        <Link className="btn btn-custom float-right" to="/admin/exam_manage/create">Tạo đề thi mới</Link>
                                     </div>
                                 </div>
                             </div>
