@@ -13,20 +13,33 @@ namespace ThiHuong.Framework.Helpers
         public const string Username = "Username";
     }
 
+    public static partial class DateTimeHelpers
+    {
+        public static bool IsValid(this DateTime current, DateTime start, DateTime end)
+        {
+            if(DateTime.Compare(start, current) <= 0 && DateTime.Compare(end, current) >= 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+    }
+
 }
 
 namespace ThiHuong.Framework
 {
     public static class EntitiesToViewModelsMapping
     {
-        public static List<TDest> ToListViewModel<TSource, TDest>(this List<TSource> entities)
+        public static List<TDest> ToListViewModel<TSource, TDest>(this IEnumerable<TSource> entities)
             where TDest : BaseViewModel
             where TSource : BaseEntity
         {
             return entities.Select(e => e.ToViewModel<TDest>()).ToList();
         }
 
-        public static List<TDest> ToListEntity<TSource, TDest>(this List<TSource> entities)
+        public static List<TDest> ToListEntity<TSource, TDest>(this IEnumerable<TSource> entities)
             where TSource : BaseViewModel
             where TDest : BaseEntity
         {

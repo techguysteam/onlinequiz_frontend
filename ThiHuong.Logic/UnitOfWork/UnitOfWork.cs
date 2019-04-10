@@ -19,6 +19,7 @@ namespace ThiHuong.Logic
         private IBaseRepository<Account> accountRepository;
         private IBaseRepository<ExamDetail> examDetailRepository;
         private IBaseRepository<AccountInStage> accountInStageRepository;
+        private IBaseRepository<Stage> stageRepository;
 
 
         public UnitOfWork(ThiHuongDbContext dbContext)
@@ -26,6 +27,17 @@ namespace ThiHuong.Logic
             this.dbContext = dbContext;
         }
 
+        public IBaseRepository<Stage> StageRepository
+        {
+            get
+            {
+                if (stageRepository == null)
+                {
+                    stageRepository = new BaseRepository<Stage>(dbContext);
+                }
+                return stageRepository;
+            }
+        }
         public IBaseRepository<Exam> ExamRepository
         {
             get
@@ -37,7 +49,6 @@ namespace ThiHuong.Logic
                 return examRepository;
             }
         }
-
         public IBaseRepository<Question> QuestionRepository
         {
             get
@@ -50,7 +61,6 @@ namespace ThiHuong.Logic
 
             }
         }
-
         public IBaseRepository<Account> AccountRepository
         {
             get
@@ -63,7 +73,6 @@ namespace ThiHuong.Logic
 
             }
         }
-       
         public IBaseRepository<ExamDetail> ExamDetailRepository
         {
             get
@@ -76,7 +85,6 @@ namespace ThiHuong.Logic
 
             }
         }
-
         public IBaseRepository<AccountInStage> AccountInStageRepository
         {
             get

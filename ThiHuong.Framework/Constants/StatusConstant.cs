@@ -22,4 +22,9 @@ namespace ThiHuong.Framework.Constants
         public const string TEXT = "TEXT";
         public const string UNTEXT = "UNTEXT";
     }
+
+    public class Constant
+    {
+        public const int TotalCodeLength = 10;
+    }
 }

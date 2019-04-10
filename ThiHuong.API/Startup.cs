@@ -25,6 +25,7 @@ using ThiHuong.Logic.QuestionService;
 using ThiHuong.Logic.ExamService;
 using ThiHuong.Framework.ViewModels.EntityViewModel;
 using ThiHuong.Logic;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ThiHuong.API
 {
@@ -45,6 +46,11 @@ namespace ThiHuong.API
             services.AddDbContext<ThiHuongDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("ThiHuongDb"));
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "ThiHuong API", Version = "v1" });
             });
 
             SetupAuthentication(services);
@@ -70,10 +76,17 @@ namespace ThiHuong.API
                 options.AllowAnyOrigin();
                 options.AllowAnyHeader();
             });
+
             app.UseStaticFiles();
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Thi Huong API");
+            });
         }
 
 

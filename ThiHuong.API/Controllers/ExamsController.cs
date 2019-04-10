@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ThiHuong.Framework.Helpers;
 using ThiHuong.Framework.Models;
+using ThiHuong.Framework.ViewModels;
 using ThiHuong.Framework.ViewModels.EntityViewModel;
 using ThiHuong.Logic.ExamService;
 
@@ -31,6 +32,24 @@ namespace ThiHuong.API.Controllers
             {
                 service.CreateExam(exam);
                 return exam;
+            });
+        }
+
+        [HttpPost("code")]
+        public dynamic GenerateCode(int examId)
+        {
+            return ExecuteInMonitoring(() =>
+            {
+                return new { code = this.service.GenerateCode(examId) };
+            });
+        }
+
+        [HttpPost("enroll")]
+        public dynamic Enroll(ExamEnrollmentViewModel enrollment)
+        {
+            return ExecuteInMonitoring(() =>
+            {
+                return this.service.Enroll(this.CurrentUserId, enrollment);
             });
         }
         
