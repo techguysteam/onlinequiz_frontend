@@ -8,8 +8,11 @@
     [Year]          INT            NULL,
     [Name]          NVARCHAR (255) NULL,
     [Code]          VARCHAR (50)   NULL,
-    CONSTRAINT [PK_Exam] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_Exam] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Exam_Stage] FOREIGN KEY ([StageId]) REFERENCES [dbo].[Stage] ([Id])
 );
+
+
 
 
 
