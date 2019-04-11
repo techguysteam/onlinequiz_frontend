@@ -30,7 +30,7 @@ namespace ThiHuong.Framework.Constants
 
     public class Constant
     {
-        public const int TotalCodeLength = 10;
+        public const int TotalCodeLength = 20;
         public const int ValidPasswordLength= 10;
 
     }
@@ -46,6 +46,9 @@ namespace ThiHuong.Framework.Constants
         public const string EXAM_NOT_FOUND = "Exam not found";
         public const string EXAM_ALREADY_TAKEN = "You have already taken this exam";
         public const string EXAM_NOT_PUBLIC = "Exam is not openned";
+
+        //enroll code
+        public const string CODE_NOT_VALID = "The code is not valid";
 
         //question
         public const string QUESTION_NOT_VALID_TO_CREATE = "Question is not valid to create";

@@ -15,17 +15,18 @@ using ThiHuong.Logic.ExamService;
 namespace ThiHuong.API.Controllers
 {
     [ApiController]
-    //[Authorize(Roles ="ADMIN")]
-    public class ExamsController : ThiHuongController
+    
+    public class ExamController : ThiHuongController
     {
         private IExamService service;
 
-        public ExamsController(IExamService service, ExtensionSettings extensionSettings) : base(extensionSettings)
+        public ExamController(IExamService service, ExtensionSettings extensionSettings) : base(extensionSettings)
         {
             this.service = service;
         }
 
         [HttpPost]
+        [Authorize(Policy = "ADMIN")]
         public async Task<dynamic> CreateExam(ExamViewModel exam)
         {
             return await ExecuteInMonitoring(async () =>
@@ -35,7 +36,8 @@ namespace ThiHuong.API.Controllers
             });
         }
 
-        [HttpPost("code")]
+        [HttpPost("code/{examId}")]
+        [Authorize(Policy = "ADMIN")]
         public async Task<dynamic> GenerateCode(int examId)
         {
             return await ExecuteInMonitoring(async () =>
@@ -45,6 +47,7 @@ namespace ThiHuong.API.Controllers
         }
 
         [HttpPost("enroll")]
+        [Authorize(Policy = "USER")]
         public async Task<dynamic> Enroll(ExamEnrollmentViewModel enrollment)
         {
             return await ExecuteInMonitoring(async () =>

@@ -34,7 +34,7 @@ namespace ThiHuong.Service
 
         public AccessTokenResponse Authen(UserAuthentication user)
         {
-            var account = repository.Get(acc => acc.Username == user.Username).FirstOrDefault();
+            var account = repository.Get(acc => acc.Username == user.Username, null, "Role").FirstOrDefault();
             AccessTokenResponse token = null;
 
             if (accountValidation.IsActive(account.Id))
@@ -46,7 +46,8 @@ namespace ThiHuong.Service
                     token = new AccessTokenResponse()
                     {
                         AccessToken = jwtSecurityTokenProvider.CreateAccesstoken(account),
-                        Username = user.Username
+                        Username = user.Username,
+                        Role = account.Role.Name
                     };
                 }
             }
@@ -61,9 +62,9 @@ namespace ThiHuong.Service
         public async Task<bool> Register(UserRegisterdViewModel user)
         {
             if (accountValidation.IsExist(user.Username))
-                throw new ThiHuongException( ErrorMessage.ACCOUNT_ALREADY_EXIST );
+                throw new ThiHuongException(ErrorMessage.ACCOUNT_ALREADY_EXIST);
             if (accountValidation.IsPasswordValid(user.Password))
-                throw new ThiHuongException( ErrorMessage.PASSWORD_NOT_VALID );
+                throw new ThiHuongException(ErrorMessage.PASSWORD_NOT_VALID);
 
             var account = user.ToEntity<Account>();
             try
@@ -73,6 +74,7 @@ namespace ThiHuong.Service
                 account.PasswordHash = hash;
                 account.PasswordSalt = salt;
                 account.RoleId = RoleConstant.USER;
+                account.Deleted = false;
 
                 if (user.Role.Equals("ADMIN", StringComparison.OrdinalIgnoreCase))
                 {

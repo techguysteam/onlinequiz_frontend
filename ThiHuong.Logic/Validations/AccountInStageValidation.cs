@@ -24,9 +24,9 @@ namespace ThiHuong.Logic.Validations
             return accountInStage != null;
         }
 
-        public bool IsValidToEnroll(AccountInStage accountInStage)
+        public bool IsValidAccountInStageToEnroll(AccountInStage accountInStage)
         {
-            return accountInStage.FinishTime != null && accountInStage.Point != null;
+            return accountInStage.FinishTime == null && accountInStage.Point == null;
         }
 
         public override bool IsExist(object Id)

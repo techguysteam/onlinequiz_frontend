@@ -30,7 +30,8 @@ namespace ThiHuong.Framework.Helpers
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.UserId, user.Id.ToString()),
-                    new Claim(ClaimTypes.Username ,user.Username)
+                    new Claim(ClaimTypes.Username ,user.Username),
+                    new Claim(ClaimTypes.Roles, user.Role.Name),
                 }),
 
                 Expires = DateTime.UtcNow.AddHours(extensionSettings.appSettings.TokenExpireTime),

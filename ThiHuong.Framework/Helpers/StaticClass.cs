@@ -11,6 +11,7 @@ namespace ThiHuong.Framework.Helpers
     {
         public const string UserId = "UserId";
         public const string Username = "Username";
+        public const string Roles = "Roles";
     }
 
     public static partial class DateTimeHelpers

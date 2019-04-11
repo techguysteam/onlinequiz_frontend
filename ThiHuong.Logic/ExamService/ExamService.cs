@@ -38,26 +38,30 @@ namespace ThiHuong.Logic.ExamService
         public async Task CreateExamAsync(ExamViewModel examViewModel)
         {
             var exam = examViewModel.ToEntity<Exam>();
+            exam.Status = StatusConstant.PENDING_EXAM;
+
+            //check valid exam
             if (examValidation.IsvalidExamEntityToCreate(exam))
             {
                 await this.repository.AddAsync(exam);
+                await this.unitOfWork.SaveChangesAsync();
             }
         }
 
         public async Task<List<QuestionForExamination>> Enroll(int accountId, ExamEnrollmentViewModel enrollment)
         {
-            //check exam
-            if (!examValidation.IsPublicExam(enrollment.ExamId))
-                throw new ThiHuongException("You cannot enroll this exam");
+            //check exam found or not
+            if (!examValidation.IsExist(enrollment.ExamId))
+                throw new ThiHuongException(ErrorMessage.EXAM_NOT_FOUND);
 
             var exam = await this.repository.FindAsync(enrollment.ExamId);
             
-            if (!examValidation.IsValidExamToEnroll(exam)) throw new ThiHuongException("Exam is not valid");
+            if (!examValidation.IsValidExamToEnroll(exam)) throw new ThiHuongException(ErrorMessage.EXAM_NOT_PUBLIC);
 
             //check code valid
             bool validCode = string.Compare(exam.Code, enrollment.Code) == 0;
 
-            if (!validCode) throw new ThiHuongException("The code is not valid");
+            if (!validCode) throw new ThiHuongException(ErrorMessage.CODE_NOT_VALID);
 
             //create account in stage if not in the system
             var accountInStageValidation = new AccountInStageValidation(this.unitOfWork);
@@ -72,7 +76,7 @@ namespace ThiHuong.Logic.ExamService
 
             var accountInStage = this.unitOfWork.AccountInStageRepository.Get(a => a.AccountId == accountId && a.ExamId == exam.Id)
                                                                          .First();
-            if ( ! accountInStageValidation.IsValidToEnroll(accountInStage) ) throw new ThiHuongException(ErrorMessage.EXAM_ALREADY_TAKEN);
+            if ( ! accountInStageValidation.IsValidAccountInStageToEnroll(accountInStage) ) throw new ThiHuongException(ErrorMessage.EXAM_ALREADY_TAKEN);
 
             //Get question by exam
             var questions = exam.ExamDetail.Select(ed => ed.Question).ToList()

@@ -16,7 +16,7 @@ namespace ThiHuong.API.Controllers
     {
         private IResultDetailService service;
 
-        public ResultDetailController(IResultDetailService service, ExtensionSettings extensionSettings) 
+        public ResultDetailController(IResultDetailService service, ExtensionSettings extensionSettings)
             : base(extensionSettings)
         {
             this.service = service;
@@ -33,12 +33,15 @@ namespace ThiHuong.API.Controllers
         }
 
         [HttpPost("submit")]
-        public async Task<dynamic> SubmitAnswerFinally(List<SubmitAnswerViewModel> submitAnswerViewModel)
+        public async Task<dynamic> SubmitAnswerFinally(List<SubmitAnswerViewModel> submitAnswerViewModel = null)
         {
             return await ExecuteInMonitoring(async () =>
             {
-                await this.service.SubmitAnswerPartialAsync(submitAnswerViewModel, this.CurrentUserId);
-                //calculate point
+                //Submit answer
+                if (submitAnswerViewModel != null && submitAnswerViewModel.Count > 0)
+                    await this.service.SubmitAnswerPartialAsync(submitAnswerViewModel, this.CurrentUserId);
+
+                //Calculate point
                 int examId = submitAnswerViewModel.First().ExamId;
                 await this.service.CalculatePoint(this.CurrentUserId, examId);
                 return null;

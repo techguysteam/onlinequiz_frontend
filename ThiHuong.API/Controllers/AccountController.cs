@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Cors;
 namespace ThiHuong.API.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
     public class AccountController : ThiHuongController
     {
         private IAccountService service;

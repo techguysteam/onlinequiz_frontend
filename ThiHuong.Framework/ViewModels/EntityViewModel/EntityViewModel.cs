@@ -21,14 +21,69 @@ namespace ThiHuong.Framework.ViewModels.EntityViewModel
     public partial class QuestionViewModel : BaseViewModel
     {
         public int Id { get; set; }
-        public string Type { get; set; }
-        public string Path { get; set; }
-        public string Content { get; set; }
-        public string A { get; set; }
-        public string B { get; set; }
-        public string C { get; set; }
-        public string D { get; set; }
-        public string Answer { get; set; }
+        private string type;
+
+        public string Type
+        {
+            get { return type; }
+            set { type = value.Trim(); }
+        }
+
+        private string path;
+
+        public string Path
+        {
+            get { return path; }
+            set { path = value.Trim(); }
+        }
+        private string content;
+
+        public string Content
+        {
+            get { return content; }
+            set { content = value.Trim(); }
+        }
+
+        private string a;
+
+        public string A
+        {
+            get { return a; }
+            set { a = value.Trim(); }
+        }
+
+        private string b;
+
+        public string B
+        {
+            get { return B; }
+            set { B = value.Trim(); }
+        }
+
+        private string c;
+
+        public string C
+        {
+            get { return C; }
+            set { C = value.Trim(); }
+        }
+
+        private string d;
+
+        public string D
+        {
+            get { return D; }
+            set { D = value.Trim(); }
+        }
+
+        private string answer;
+
+        public string Answer
+        {
+            get { return answer; }
+            set { answer = value.Trim(); }
+        }
+
         public float? Point { get; set; }
         public bool? IsActive { get; set; }
     }

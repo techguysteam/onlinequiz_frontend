@@ -93,7 +93,7 @@ namespace ThiHuong.API
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<UserRegisterdViewModel, Account>();
+                cfg.CreateMap<UserRegisterdViewModel, Account>().ForMember(u => u.Role, options => options.Ignore());
 
                 cfg.CreateMap<Question, QuestionViewModel>();
                 cfg.CreateMap<QuestionViewModel, Question>();
@@ -155,12 +155,21 @@ namespace ThiHuong.API
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Policy", policy =>
+                options.AddPolicy("ADMIN", policy =>
                 {
                     policy.RequireAuthenticatedUser();
+                    policy.AuthenticationSchemes = new List<string> { JwtBearerDefaults.AuthenticationScheme };
+                    policy.RequireClaim(ClaimTypes.Roles, "ADMIN");
+                });
+
+                options.AddPolicy("USER", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.AuthenticationSchemes = new List<string> { JwtBearerDefaults.AuthenticationScheme };
+                    policy.RequireClaim(ClaimTypes.Roles, "USER");
                 });
             });
-        }
 
+        }
     }
 }
