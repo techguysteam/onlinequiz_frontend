@@ -89,7 +89,6 @@ namespace ThiHuong.API
             });
         }
 
-
         private void SetupAutoMapper()
         {
             Mapper.Initialize(cfg =>
@@ -124,7 +123,6 @@ namespace ThiHuong.API
             services.AddScoped<IExamService, ExamService>();
             services.AddScoped<IResultDetailService, ResultDetailService>();
             services.AddScoped<UnitOfWork>();
-
 
         }
 

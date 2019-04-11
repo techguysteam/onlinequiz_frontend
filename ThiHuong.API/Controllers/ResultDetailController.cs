@@ -23,23 +23,24 @@ namespace ThiHuong.API.Controllers
         }
 
         [HttpPost]
-        public dynamic SubmitAnswerPartial(List<SubmitAnswerViewModel> submitAnswerViewModel)
+        public async Task<dynamic> SubmitAnswerPartialAsync(List<SubmitAnswerViewModel> submitAnswerViewModel)
         {
-            return ExecuteInMonitoring(() =>
+            return await ExecuteInMonitoring(async () =>
             {
-                this.service.SubmitAnswerPartial(submitAnswerViewModel, this.CurrentUserId);
+                await this.service.SubmitAnswerPartialAsync(submitAnswerViewModel, this.CurrentUserId);
                 return null;
             });
         }
 
         [HttpPost("submit")]
-        public dynamic SubmitAnswerFinally(List<SubmitAnswerViewModel> submitAnswerViewModel)
+        public async Task<dynamic> SubmitAnswerFinally(List<SubmitAnswerViewModel> submitAnswerViewModel)
         {
-            return ExecuteInMonitoring(() =>
+            return await ExecuteInMonitoring(async () =>
             {
-                this.service.SubmitAnswerPartial(submitAnswerViewModel, this.CurrentUserId);
+                await this.service.SubmitAnswerPartialAsync(submitAnswerViewModel, this.CurrentUserId);
                 //calculate point
-                
+                int examId = submitAnswerViewModel.First().ExamId;
+                await this.service.CalculatePoint(this.CurrentUserId, examId);
                 return null;
             });
         }

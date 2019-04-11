@@ -26,18 +26,18 @@ namespace ThiHuong.API.Controllers
         {
             return ExecuteInMonitoring(() =>
             {
-                var result =  service.Authen(user);
+                var result = service.Authen(user);
                 return result;
             });
         }
 
         [HttpPost("register")]
-        public dynamic Register(UserRegisterdViewModel user)
+        public async Task<dynamic> Register(UserRegisterdViewModel user)
         {
-            return ExecuteInMonitoring(() =>
+            return await ExecuteInMonitoring(async () =>
             {
-                this.service.Register(user);
-                return null;
+                await this.service.Register(user);
+                return new { success = "success" };
             });
         }
 

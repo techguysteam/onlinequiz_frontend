@@ -50,6 +50,27 @@ namespace ThiHuong.API.Controllers
             catch (ThiHuongException ex)
             {
                 return BaseResponse.GetErrorResponse(ex.Message);
+            }catch(Exception ex)
+            {
+                return BaseResponse.GetErrorResponse(ex.Message);
+            }
+            return BaseResponse.GetSuccessResponse(result);
+        }
+
+        protected async Task<dynamic> ExecuteInMonitoring(Func<Task<dynamic>> function)
+        {
+            dynamic result;
+            try
+            {
+                result = await function();
+            }
+            catch (ThiHuongException ex)
+            {
+                return BaseResponse.GetErrorResponse(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BaseResponse.GetErrorResponse(ex.Message);
             }
             return BaseResponse.GetSuccessResponse(result);
         }

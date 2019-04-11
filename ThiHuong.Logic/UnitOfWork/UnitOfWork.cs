@@ -9,7 +9,6 @@ using ThiHuong.Logic.ExamService;
 
 namespace ThiHuong.Logic
 {
-
     public class UnitOfWork : IDisposable
     {
 
@@ -99,16 +98,9 @@ namespace ThiHuong.Logic
         }
 
 
-        public async void SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
-            try
-            {
-                await dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new ThiHuongException(ex.Message, ex);
-            }
+            await dbContext.SaveChangesAsync();
         }
 
         private bool disposed = false;

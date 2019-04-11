@@ -8,13 +8,14 @@ namespace ThiHuong.Framework.ViewModels.EntityViewModel
     public partial class ExamViewModel : BaseViewModel
     {
         public int Id { get; set; }
-        public DateTime? Duration { get; set; }
+        public int? Duration { get; set; }
         public int? TotalQuestion { get; set; }
         public string Status { get; set; }
         public DateTime? OpenTime { get; set; }
         public int? StageId { get; set; }
         public int? Year { get; set; }
         public string Name { get; set; }
+        public string Code { get; set; }
     }
 
     public partial class QuestionViewModel : BaseViewModel

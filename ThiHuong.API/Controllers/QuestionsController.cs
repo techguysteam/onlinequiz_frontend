@@ -25,34 +25,34 @@ namespace ThiHuong.API.Controllers
         }
 
         [HttpPost]
-        public async Task<dynamic> CreateQuestion([FromForm]Question question)
+        public async Task<dynamic> CreateQuestionAsync([FromForm]QuestionViewModel question)
         {
             IFormFile file = null;
             if (HttpContext.Request.Form != null)
             {
                 file = HttpContext.Request.Form.Files.FirstOrDefault();
             }
-            return ExecuteInMonitoring(() =>
+            return await ExecuteInMonitoring(async () =>
             {
-                return this.service.CreateQuestion(question, file, this.extensionSettings.appSettings.SaveDirectory).Result;
+                return await this.service.CreateQuestionAsync(question, file, this.extensionSettings.appSettings.SaveDirectory);
             });
         }
 
         [HttpGet]
-        public dynamic GetQuestion()
+        public async Task<dynamic> GetQuestion()
         {
-            return ExecuteInMonitoring(() =>
+            return await ExecuteInMonitoring(async () =>
             {
-                return this.service.Get<QuestionViewModel>();
+                return await this.service.Get<QuestionViewModel>();
             });
         }
 
         [HttpGet("{examId}")]
-        public dynamic GetQuestionByExamId(int examId)
+        public async Task<dynamic> GetQuestionByExamId(int examId)
         {
-            return ExecuteInMonitoring(() =>
+            return await ExecuteInMonitoring(async () =>
             {
-                return this.service.GetQuestionByExamId(examId);
+                return await this.service.GetQuestionByExamId(examId);
             });
         }
 

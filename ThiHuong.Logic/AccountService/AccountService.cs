@@ -10,32 +10,36 @@ using ThiHuong.Logic.BaseRepository;
 using ThiHuong.Logic.BaseService;
 using ThiHuong.Framework.Constants;
 using ThiHuong.Logic;
+using ThiHuong.Logic.Validations;
 
 namespace ThiHuong.Service
 {
     public interface IAccountService : IBaseService<Account>
     {
         AccessTokenResponse Authen(UserAuthentication user);
-        bool Register(UserRegisterdViewModel user);
+        Task<bool> Register(UserRegisterdViewModel user);
     }
 
     public class AccountService : BaseService<Account>, IAccountService
     {
         private JwtSecurityTokenProvider jwtSecurityTokenProvider;
+        private AccountValidation accountValidation;
 
-        public AccountService(UnitOfWork unitOfWork, JwtSecurityTokenProvider jwtSecurityTokenProvider) 
+        public AccountService(UnitOfWork unitOfWork, JwtSecurityTokenProvider jwtSecurityTokenProvider)
             : base(unitOfWork.AccountRepository, unitOfWork)
         {
             this.jwtSecurityTokenProvider = jwtSecurityTokenProvider;
+            this.accountValidation = new AccountValidation(this.unitOfWork);
         }
 
         public AccessTokenResponse Authen(UserAuthentication user)
         {
             var account = repository.Get(acc => acc.Username == user.Username).FirstOrDefault();
             AccessTokenResponse token = null;
-            if(account != null)
+
+            if (accountValidation.IsActive(account.Id))
             {
-                var result = 
+                var result =
                     PasswordManipulation.VerifyPasswordHash(user.Password, account.PasswordHash, account.PasswordSalt);
                 if (result)
                 {
@@ -46,16 +50,21 @@ namespace ThiHuong.Service
                     };
                 }
             }
-            
-            if(token == null)
+
+            if (token == null)
             {
                 throw new ThiHuongException("Account is not verify");
             }
             return token;
         }
 
-        public bool Register(UserRegisterdViewModel user)
+        public async Task<bool> Register(UserRegisterdViewModel user)
         {
+            if (accountValidation.IsExist(user.Username))
+                throw new ThiHuongException( ErrorMessage.ACCOUNT_ALREADY_EXIST );
+            if (accountValidation.IsPasswordValid(user.Password))
+                throw new ThiHuongException( ErrorMessage.PASSWORD_NOT_VALID );
+
             var account = user.ToEntity<Account>();
             try
             {
@@ -64,11 +73,18 @@ namespace ThiHuong.Service
                 account.PasswordHash = hash;
                 account.PasswordSalt = salt;
                 account.RoleId = RoleConstant.USER;
-                this.repository.AddAsync(account);
-                this.unitOfWork.SaveChangesAsync();
-            }catch(Exception ex)
+
+                if (user.Role.Equals("ADMIN", StringComparison.OrdinalIgnoreCase))
+                {
+                    account.RoleId = RoleConstant.ADMIN;
+                }
+
+                await this.repository.AddAsync(account);
+                await this.unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
             {
-                throw new ThiHuongException(ex.Message, ex);
+                throw ex;
             }
             return true;
         }

@@ -13,7 +13,7 @@ namespace ThiHuong.Logic.BaseService
 {
     public interface IBaseService<TEntity> where TEntity: BaseEntity
     {
-        void Add(TEntity entity);
+        Task Add(TEntity entity);
         void Delete(TEntity entity);
         void Update(TEntity entity, TEntity updatedEntity);
         Task<TEntity> FindAsync(object Id);
@@ -33,9 +33,9 @@ namespace ThiHuong.Logic.BaseService
             this.unitOfWork = unitOfWork;
         }
 
-        public void Add(TEntity entity)
+        public async Task Add(TEntity entity)
         {
-            this.repository.AddAsync(entity);
+            await this.repository.AddAsync(entity);
         }
 
         public void Delete(TEntity entity)

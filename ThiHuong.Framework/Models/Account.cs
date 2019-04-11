@@ -20,6 +20,7 @@ namespace ThiHuong.Framework.Models
         public string Address { get; set; }
         public DateTime? Birthdate { get; set; }
         public int? RoleId { get; set; }
+        public bool? Deleted { get; set; }
 
         public Role Role { get; set; }
         public ICollection<AccountInStage> AccountInStage { get; set; }

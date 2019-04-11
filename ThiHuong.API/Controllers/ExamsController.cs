@@ -26,30 +26,30 @@ namespace ThiHuong.API.Controllers
         }
 
         [HttpPost]
-        public dynamic CreateExam(ExamViewModel exam)
+        public async Task<dynamic> CreateExam(ExamViewModel exam)
         {
-            return ExecuteInMonitoring(() =>
+            return await ExecuteInMonitoring(async () =>
             {
-                service.CreateExam(exam);
+                await service.CreateExamAsync(exam);
                 return exam;
             });
         }
 
         [HttpPost("code")]
-        public dynamic GenerateCode(int examId)
+        public async Task<dynamic> GenerateCode(int examId)
         {
-            return ExecuteInMonitoring(() =>
+            return await ExecuteInMonitoring(async () =>
             {
-                return new { code = this.service.GenerateCode(examId) };
+                return new { code = await this.service.GenerateCodeAsync(examId) };
             });
         }
 
         [HttpPost("enroll")]
-        public dynamic Enroll(ExamEnrollmentViewModel enrollment)
+        public async Task<dynamic> Enroll(ExamEnrollmentViewModel enrollment)
         {
-            return ExecuteInMonitoring(() =>
+            return await ExecuteInMonitoring(async () =>
             {
-                return this.service.Enroll(this.CurrentUserId, enrollment);
+                return await this.service.Enroll(this.CurrentUserId, enrollment);
             });
         }
         

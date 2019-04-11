@@ -9,8 +9,11 @@
     [Address]      NVARCHAR (255)  NULL,
     [Birthdate]    DATETIME        NULL,
     [RoleId]       INT             NULL,
+    [Deleted]      BIT             NULL,
     CONSTRAINT [PK_Account] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Account_Role] FOREIGN KEY ([RoleId]) REFERENCES [dbo].[Role] ([Id]),
     CONSTRAINT [IX_Account] UNIQUE NONCLUSTERED ([Username] ASC)
 );
+
+
 

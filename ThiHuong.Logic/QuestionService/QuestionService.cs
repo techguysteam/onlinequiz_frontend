@@ -12,12 +12,13 @@ using ThiHuong.Framework.Models;
 using ThiHuong.Framework.ViewModels.EntityViewModel;
 using ThiHuong.Logic.BaseRepository;
 using ThiHuong.Logic.BaseService;
+using ThiHuong.Logic.Validations;
 
 namespace ThiHuong.Logic.QuestionService
 {
     public interface IQuestionService : IBaseService<Question>
     {
-        Task<QuestionViewModel> CreateQuestion(Question question, IFormFile file, string pathInServer);
+        Task<QuestionViewModel> CreateQuestionAsync(QuestionViewModel question, IFormFile file, string pathInServer);
         Task<List<QuestionViewModel>> GetQuestionByExamId(int examId);
     }
 
@@ -25,16 +26,20 @@ namespace ThiHuong.Logic.QuestionService
     {
         private IHttpContextAccessor httpContextAccessor;
         private IHostingEnvironment env;
+        private QuestionValidation questionValidation;
 
         public QuestionService(UnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IHostingEnvironment env) 
             : base(unitOfWork.QuestionRepository, unitOfWork)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.env = env;
+            this.questionValidation = new QuestionValidation(this.unitOfWork);
         }
 
-        public async Task<QuestionViewModel> CreateQuestion(Question question, IFormFile file, string pathInServerWithoutHost)
+        public async Task<QuestionViewModel> CreateQuestionAsync(QuestionViewModel questionViewModel, IFormFile file, string pathInServerWithoutHost)
         {
+            var question = questionViewModel.ToEntity<Question>();
+
             question.Type = QuestionType.TEXT;
 
             //prepare the path in server
@@ -45,7 +50,6 @@ namespace ThiHuong.Logic.QuestionService
                 question.Type = QuestionType.UNTEXT;
                 pathInServer = Path.Combine(pathInServer, pathInServerWithoutHost);
             }
-
 
             if (!question.Type.Equals(QuestionType.TEXT))
             {
@@ -65,15 +69,22 @@ namespace ThiHuong.Logic.QuestionService
                     question.Path = uriBuilder.Uri.AbsoluteUri;
                 }
             }
-
             question.IsActive = true;
-            this.repository.AddAsync(question);
-            this.unitOfWork.SaveChangesAsync();
+
+            if (!questionValidation.IsValidQuestionToCreate(question)) throw new ThiHuongException(ErrorMessage.QUESTION_NOT_VALID_TO_CREATE);
+
+            await this.repository.AddAsync(question);
+            await this.unitOfWork.SaveChangesAsync();
+
             return question.ToViewModel<QuestionViewModel>();
         }
 
         public async Task<List<QuestionViewModel>> GetQuestionByExamId(int examId)
         {
+            //valid exam
+            var examValidation = new ExamValidation(this.unitOfWork);
+            if (!examValidation.IsExist(examId)) throw new ThiHuongException(ErrorMessage.EXAM_NOT_FOUND);
+
             var questionIdsContainInExamId = unitOfWork.ExamDetailRepository.Get(ed => ed.ExamId == examId)
                                                        .Select(ed => ed.QuestionId);
             var entityResult = await this.repository.Get(q => questionIdsContainInExamId.Contains(q.Id)).ToListAsync();

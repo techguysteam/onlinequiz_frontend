@@ -11,8 +11,8 @@ namespace ThiHuong.Logic.BaseRepository
 
     public interface IBaseRepository<TEntity> where TEntity : class
     {
-        void AddRangeAsync(params object[] entities);
-        void AddAsync(TEntity entity);
+        Task AddRangeAsync(params object[] entities);
+        Task AddAsync(TEntity entity);
         void Delete(TEntity entity);
         void Update(TEntity entity, TEntity updatedEntity);
         void Update(TEntity entity);
@@ -57,9 +57,9 @@ namespace ThiHuong.Logic.BaseRepository
             return query;
         }
 
-        public void AddAsync(TEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
-            dbContext.AddAsync(entity);
+            await dbContext.AddAsync(entity);
         }
 
         public void Delete(TEntity entity)
@@ -79,7 +79,7 @@ namespace ThiHuong.Logic.BaseRepository
             return await dbContext.Set<TEntity>().FindAsync(Id);
         }
 
-        public virtual async void AddRangeAsync(params object[] entities)
+        public virtual async Task AddRangeAsync(params object[] entities)
         {
             await dbContext.AddRangeAsync(entities);
         }
