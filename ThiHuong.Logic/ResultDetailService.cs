@@ -14,22 +14,30 @@ namespace ThiHuong.Logic
 {
     public interface IResultDetailService : IBaseService<ResultDetail>
     {
-        Task SubmitAnswerPartialAsync(List<SubmitAnswerViewModel> answers, int accountId);
+        Task SubmitAnswerPartialAsync(List<SubmitAnswerViewModel> answers, int accountId, int examId);
         Task CalculatePoint(int accountId, int examId);
     }
 
     public class ResultDetailService : BaseService<ResultDetail>, IResultDetailService
     {
-        public ResultDetailService(IBaseRepository<ResultDetail> repository, UnitOfWork unitOfWork)
-            : base(repository, unitOfWork)
+        private ResultDetailValidation resultDetailValidation;
+        public ResultDetailService(UnitOfWork unitOfWork)
+            : base(unitOfWork.ResultDetailRepository, unitOfWork)
         {
+            this.resultDetailValidation = new ResultDetailValidation(this.unitOfWork);
         }
 
         public async Task CalculatePoint(int accountId, int examId)
         {
-            var resultDetails = this.repository.Get(rd => rd.AccountId == accountId && rd.ExamId == examId).ToList();
+            //get account in stage Id
+            var accountInStage = this.unitOfWork.AccountInStageRepository.Get(a => a.AccountId == accountId && a.ExamId == examId).First();
+
+            //get all answers
+            var resultDetails = this.repository.Get(rd => rd.AccountInStageId == accountInStage.Id).ToList();
             var questionIds = resultDetails.Select(rd => rd.QuestionId);
             var questionsInExam = this.unitOfWork.QuestionRepository.Get(q => questionIds.Contains(q.Id)).ToList();
+
+            //calculate point
             float point = 0;
             resultDetails.ForEach(rd =>
             {
@@ -37,9 +45,9 @@ namespace ThiHuong.Logic
                 rd.Answer = question.Answer;
                 rd.IsCorrect = false;
                 rd.Point = question.Point;
-                if (question.Answer.Equals(rd.Answer, StringComparison.OrdinalIgnoreCase))
+                if (question.Answer.Equals(rd.Choice, StringComparison.OrdinalIgnoreCase))
                 {
-                    point += question.Point ?? 0;
+                    point += question.Point ?? 1;
                     rd.IsCorrect = true;
                 }
             });
@@ -59,25 +67,37 @@ namespace ThiHuong.Logic
 
         }
 
-        public async Task SubmitAnswerPartialAsync(List<SubmitAnswerViewModel> answers, int accountId)
+        public async Task SubmitAnswerPartialAsync(List<SubmitAnswerViewModel> answers, int accountId, int examId)
         {
+            //if allow to submit answer
+            var accountInStageValidation = new AccountInStageValidation(this.unitOfWork);
+            var accountInStage = this.unitOfWork.AccountInStageRepository.Get(a => a.AccountId == accountId && a.ExamId == examId).First();
+            if (!accountInStageValidation.IsValidToSubmitAnswer(accountInStage)) throw new ThiHuongException(ErrorMessage.EXAM_ALREADY_TAKEN);
+            
             //check answer list has elements
             if (answers == null || answers.Count <= 0) throw new ThiHuongException("No answer");
 
             answers.ForEach(a => a.AccountId = accountId);
             var resultDetails = answers.ToListEntity<SubmitAnswerViewModel, ResultDetail>();
 
-            //check valid exam
-            var examId = resultDetails.First().ExamId;
-            var examValidation = new ExamValidation(this.unitOfWork);
-            if (!examValidation.IsPublicExam(examId)) throw new ThiHuongException(ErrorMessage.EXAM_NOT_PUBLIC);
-
-            var questionIds = resultDetails.Select(rd => rd.QuestionId);
+           
 
             //Find and update the answers that have already submitted
-            var resultDetailsAlreadyAdded = this.repository.Get(rd => rd.ExamId == examId
-                                                                      && rd.AccountId == accountId
-                                                                      && questionIds.Contains(rd.QuestionId))
+            var questionIds = resultDetails.Select(rd => rd.QuestionId).ToList();
+
+            //check answer contains valid question in ExamDetail
+            var examDetails = this.unitOfWork.ExamDetailRepository.Get(rd => rd.ExamId == examId).ToList();
+            questionIds.ForEach(qId =>
+            {
+                if (examDetails.FirstOrDefault(ed => ed.QuestionId == qId) == null)
+                {
+                    var rdt = resultDetails.First(rd => rd.QuestionId == qId);
+                    resultDetails.Remove(rdt);
+                }
+            });
+
+
+            var resultDetailsAlreadyAdded = this.repository.Get(rd => rd.AccountInStageId == accountInStage.Id && questionIds.Contains(rd.QuestionId))
                                                            .ToList();
 
             if (resultDetailsAlreadyAdded != null && resultDetailsAlreadyAdded.Count > 0)
@@ -87,12 +107,13 @@ namespace ThiHuong.Logic
                     var updatedAnswer = resultDetails.Where(rd => rd.QuestionId == answer.QuestionId).FirstOrDefault();
                     answer.Choice = updatedAnswer.Choice;
                 });
-                questionIds = resultDetailsAlreadyAdded.Select(rd => rd.QuestionId);
+                questionIds = resultDetailsAlreadyAdded.Select(rd => rd.QuestionId).ToList();
 
                 this.repository.UpdateRange(resultDetailsAlreadyAdded);
                 //After updating the answer, remove it from the result detail list
                 resultDetails.RemoveAll(rd => questionIds.Contains(rd.QuestionId));
             }
+            resultDetails.ForEach(rd => rd.AccountInStageId = accountInStage.Id);
 
             await this.repository.AddRangeAsync(resultDetails);
 

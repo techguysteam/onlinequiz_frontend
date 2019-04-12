@@ -34,7 +34,13 @@ namespace ThiHuong.Framework.ViewModels.EntityViewModel
         public string Path
         {
             get { return path; }
-            set { path = value.Trim(); }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    path = value.Trim();
+                }
+            }
         }
         private string content;
 
@@ -56,24 +62,24 @@ namespace ThiHuong.Framework.ViewModels.EntityViewModel
 
         public string B
         {
-            get { return B; }
-            set { B = value.Trim(); }
+            get { return b; }
+            set { b = value.Trim(); }
         }
 
         private string c;
 
         public string C
         {
-            get { return C; }
-            set { C = value.Trim(); }
+            get { return c; }
+            set { c = value.Trim(); }
         }
 
         private string d;
 
         public string D
         {
-            get { return D; }
-            set { D = value.Trim(); }
+            get { return d; }
+            set { d = value.Trim(); }
         }
 
         private string answer;

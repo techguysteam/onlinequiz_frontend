@@ -20,12 +20,27 @@ namespace ThiHuong.Logic
         private IBaseRepository<AccountInStage> accountInStageRepository;
         private IBaseRepository<Stage> stageRepository;
 
+        private IBaseRepository<ResultDetail> resultDetailRepository;
+
+
+
+
 
         public UnitOfWork(ThiHuongDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
-
+        public IBaseRepository<ResultDetail> ResultDetailRepository
+        {
+            get
+            {
+                if (resultDetailRepository == null)
+                {
+                    resultDetailRepository = new BaseRepository<ResultDetail>(dbContext);
+                }
+                return resultDetailRepository;
+            }
+        }
         public IBaseRepository<Stage> StageRepository
         {
             get

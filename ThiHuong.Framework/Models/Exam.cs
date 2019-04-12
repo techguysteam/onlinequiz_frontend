@@ -21,8 +21,8 @@ namespace ThiHuong.Framework.Models
         public string Name { get; set; }
         public string Code { get; set; }
 
-        public Stage Stage { get; set; }
-        public ICollection<AccountInStage> AccountInStage { get; set; }
-        public ICollection<ExamDetail> ExamDetail { get; set; }
+        public virtual Stage Stage { get; set; }
+        public virtual ICollection<AccountInStage> AccountInStage { get; set; }
+        public virtual ICollection<ExamDetail> ExamDetail { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace ThiHuong.Framework.Models
         public int? RoleId { get; set; }
         public bool? Deleted { get; set; }
 
-        public Role Role { get; set; }
-        public ICollection<AccountInStage> AccountInStage { get; set; }
+        public virtual Role Role { get; set; }
+        public virtual ICollection<AccountInStage> AccountInStage { get; set; }
     }
 }

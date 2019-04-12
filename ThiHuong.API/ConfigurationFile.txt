@@ -1,3 +1,10 @@
 ﻿Scaffold-DbContext "Server=.\SQLExpress;Database=ThiHuongDb;Trusted_Connection=True;User Id=sa;Password=zaQ@1234" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
 
 Install-package Microsoft.EntityFrameworkCore.SqlServer --version 2.1.8
+
+ADMIN
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxOCIsIlVzZXJuYW1lIjoiYWRtaW4iLCJSb2xlcyI6IkFETUlOIiwibmJmIjoxNTU1MDUwNzYxLCJleHAiOjE1NjgwMTA3NjEsImlhdCI6MTU1NTA1MDc2MX0.agovgHjNMb-AGqq8ZBrEZSJ42lR2Bmmgz1apDcEbC-Y
+
+
+USER
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxOSIsIlVzZXJuYW1lIjoiZGluaHBodSIsIlJvbGVzIjoiVVNFUiIsIm5iZiI6MTU1NTA1MDc4NCwiZXhwIjoxNTY4MDEwNzg0LCJpYXQiOjE1NTUwNTA3ODR9.CbqD7L9AMC9c-bNCrNNh8mj0NEiyAvgH-uvBYWKGbCs

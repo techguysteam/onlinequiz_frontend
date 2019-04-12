@@ -22,6 +22,6 @@ namespace ThiHuong.Framework.Models
         public float? Point { get; set; }
         public bool? IsActive { get; set; }
 
-        public ICollection<ExamDetail> ExamDetail { get; set; }
+        public virtual ICollection<ExamDetail> ExamDetail { get; set; }
     }
 }

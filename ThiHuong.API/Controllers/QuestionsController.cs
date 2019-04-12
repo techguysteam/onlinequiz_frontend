@@ -25,6 +25,8 @@ namespace ThiHuong.API.Controllers
             this.service = service;
         }
 
+        //HttpPost
+
         [HttpPost]
         [Authorize(Policy = "ADMIN")]
         public async Task<dynamic> CreateQuestionAsync([FromForm]QuestionViewModel question)
@@ -40,6 +42,30 @@ namespace ThiHuong.API.Controllers
             });
         }
 
+        [HttpPost("deactive/{questionId}")]
+        [Authorize(Policy = "ADMIN")]
+        public async Task<dynamic> DeactivateQuestion(int questionId)
+        {
+            return await ExecuteInMonitoring(async () =>
+            {
+                await this.service.Deactivate(questionId);
+                return new { success = "success" };
+            });
+        }
+
+        [HttpPost("active/{questionId}")]
+        [Authorize(Policy = "ADMIN")]
+        public async Task<dynamic> ActivateQuestion(int questionId)
+        {
+            return await ExecuteInMonitoring(async () =>
+            {
+                await this.service.Activate(questionId);
+                return new { success = "success" };
+            });
+        }
+
+        //HttpGet
+
         [HttpGet]
         [Authorize(Policy = "ADMIN")]
         public async Task<dynamic> GetQuestion()
@@ -47,6 +73,16 @@ namespace ThiHuong.API.Controllers
             return await ExecuteInMonitoring(async () =>
             {
                 return await this.service.Get<QuestionViewModel>();
+            });
+        }
+
+        [HttpGet("active")]
+        [Authorize(Policy = "ADMIN")]
+        public async Task<dynamic> GetActiveQuestions()
+        {
+            return await ExecuteInMonitoring(async () =>
+            {
+                return await this.service.GetActiveQuestions();
             });
         }
 
@@ -60,9 +96,33 @@ namespace ThiHuong.API.Controllers
             });
         }
 
+        //HttpPut
+        [HttpPut()]
+        [Authorize(Policy = "ADMIN")]
+        public async Task<dynamic> UpdateQuestion([FromForm]QuestionViewModel question)
+        {
+            IFormFile file = null;
+            if (HttpContext.Request.Form != null)
+            {
+                file = HttpContext.Request.Form.Files.FirstOrDefault();
+            }
+            return await ExecuteInMonitoring(async () =>
+            {
+                var result = await this.service.UpdateQuestion(question, file, this.extensionSettings.appSettings.SaveDirectory);
+                return result;
+            });
+        }
 
-
-
-
+        //HttpDelete
+        [HttpDelete("{questionId}")]
+        [Authorize(Policy = "ADMIN")]
+        public async Task<dynamic> DeleteQuestionPermanently(int questionId)
+        {
+            return await ExecuteInMonitoring(async () =>
+            {
+                await this.service.DeletePermanently(questionId);
+                return new { success = "success" };
+            });
+        }
     }
 }

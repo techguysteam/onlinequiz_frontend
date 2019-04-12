@@ -5,10 +5,16 @@ using System.Threading.Tasks;
 
 namespace ThiHuong.Logic.Validations
 {
-    public class ResultDetailValidation : BaseValidation
+    public class ExamDetailValidation : BaseValidation
     {
-        public ResultDetailValidation(UnitOfWork unitOfWork) : base(unitOfWork)
+        public ExamDetailValidation(UnitOfWork unitOfWork) : base(unitOfWork)
         {
+        }
+
+        public bool IsQuestionAlreadyInExam(int questionId, int examId)
+        {
+            var examDetail = this.unitOfWork.ExamDetailRepository.Get(ed => ed.ExamId == examId && ed.QuestionId == questionId).FirstOrDefault();
+            return examDetail != null;
         }
 
         public override bool IsActive(object Id)

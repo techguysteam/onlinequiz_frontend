@@ -67,7 +67,7 @@ namespace ThiHuong.Logic.Validations
 
         public bool IsActive(Question question)
         {
-            return question != null && !(question.IsActive ?? true);
+            return question != null && (question.IsActive ?? true);
         }
 
         public bool IsExist(Question question)

@@ -23,6 +23,6 @@ namespace ThiHuong.Framework.Models
         public virtual DbSet<ResultDetail> ResultDetail { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Stage> Stage { get; set; }
-
+        
     }
 }

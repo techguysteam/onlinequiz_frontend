@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ThiHuong.Framework.Helpers;
@@ -12,6 +13,7 @@ namespace ThiHuong.API.Controllers
 {
     [ApiController]
     [Route("api/answer")]
+    [Authorize(Policy = "USER")]
     public class ResultDetailController : ThiHuongController
     {
         private IResultDetailService service;
@@ -22,27 +24,26 @@ namespace ThiHuong.API.Controllers
             this.service = service;
         }
 
-        [HttpPost]
-        public async Task<dynamic> SubmitAnswerPartialAsync(List<SubmitAnswerViewModel> submitAnswerViewModel)
+        [HttpPost("{examId}")]
+        public async Task<dynamic> SubmitAnswerPartialAsync([FromBody] List<SubmitAnswerViewModel> submitAnswerViewModel, int examId)
         {
             return await ExecuteInMonitoring(async () =>
             {
-                await this.service.SubmitAnswerPartialAsync(submitAnswerViewModel, this.CurrentUserId);
+                await this.service.SubmitAnswerPartialAsync(submitAnswerViewModel, this.CurrentUserId, examId);
                 return null;
             });
         }
 
-        [HttpPost("submit")]
-        public async Task<dynamic> SubmitAnswerFinally(List<SubmitAnswerViewModel> submitAnswerViewModel = null)
+        [HttpPost("submit/{examId}")]
+        public async Task<dynamic> SubmitAnswerFinally(int examId, [FromBody] List<SubmitAnswerViewModel> submitAnswerViewModel = null)
         {
             return await ExecuteInMonitoring(async () =>
             {
                 //Submit answer
                 if (submitAnswerViewModel != null && submitAnswerViewModel.Count > 0)
-                    await this.service.SubmitAnswerPartialAsync(submitAnswerViewModel, this.CurrentUserId);
+                    await this.service.SubmitAnswerPartialAsync(submitAnswerViewModel, this.CurrentUserId, examId);
 
                 //Calculate point
-                int examId = submitAnswerViewModel.First().ExamId;
                 await this.service.CalculatePoint(this.CurrentUserId, examId);
                 return null;
             });

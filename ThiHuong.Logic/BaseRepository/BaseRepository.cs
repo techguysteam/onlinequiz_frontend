@@ -11,12 +11,13 @@ namespace ThiHuong.Logic.BaseRepository
 
     public interface IBaseRepository<TEntity> where TEntity : class
     {
-        Task AddRangeAsync(params object[] entities);
+        Task AddRangeAsync(List<TEntity> entities);
         Task AddAsync(TEntity entity);
         void Delete(TEntity entity);
+        //void Delete(object Id);
         void Update(TEntity entity, TEntity updatedEntity);
         void Update(TEntity entity);
-        void UpdateRange(params object[] entities);
+        void UpdateRange(List<TEntity> entities);
         Task<TEntity> FindAsync(object Id);
         IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
@@ -79,12 +80,12 @@ namespace ThiHuong.Logic.BaseRepository
             return await dbContext.Set<TEntity>().FindAsync(Id);
         }
 
-        public virtual async Task AddRangeAsync(params object[] entities)
+        public virtual async Task AddRangeAsync(List<TEntity> entities)
         {
             await dbContext.AddRangeAsync(entities);
         }
 
-        public virtual void UpdateRange(params object[] entities)
+        public virtual void UpdateRange(List<TEntity> entities)
         {
             dbContext.UpdateRange(entities);
         }
@@ -94,5 +95,6 @@ namespace ThiHuong.Logic.BaseRepository
             dbContext.Set<TEntity>().Attach(entityToUpdate);
             dbContext.Entry(entityToUpdate).State = EntityState.Modified;
         }
+
     }
 }

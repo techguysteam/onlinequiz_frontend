@@ -55,6 +55,28 @@ namespace ThiHuong.API.Controllers
                 return await this.service.Enroll(this.CurrentUserId, enrollment);
             });
         }
-        
+
+        [HttpPost("{examId}/{questionId}")]
+        [Authorize(Policy = "ADMIN")]
+        public async Task<dynamic> AddQuestionToExam(int examId, int questionId)
+        {
+            return await ExecuteInMonitoring(async () =>
+            {
+                await this.service.AddQuestionIntoExam(examId, questionId);
+                return new { success = "success" };
+            });
+        }
+
+        [HttpDelete("{examId}/{questionId}")]
+        [Authorize(Policy = "ADMIN")]
+        public async Task<dynamic> RemoveQuestionFromExam(int examId, int questionId)
+        {
+            return await ExecuteInMonitoring(async () =>
+            {
+                await this.service.RemoveQuestionFromExam(examId, questionId);
+                return new { success = "success" };
+            });
+        }
+
     }
 }

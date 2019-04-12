@@ -16,6 +16,6 @@ namespace ThiHuong.Framework.Models
         public DateTime? EndDate { get; set; }
         public string Status { get; set; }
 
-        public ICollection<Exam> Exam { get; set; }
+        public virtual ICollection<Exam> Exam { get; set; }
     }
 }

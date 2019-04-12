@@ -12,7 +12,10 @@ namespace ThiHuong.Logic.Validations
         {
         }
 
-
+        public bool IsValidToSubmitAnswer(AccountInStage accountInStage)
+        {
+            return accountInStage != null && accountInStage.FinishTime == null && accountInStage.Point == null;
+        }
         public override bool IsActive(object Id)
         {
             throw new NotImplementedException();

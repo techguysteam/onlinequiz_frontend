@@ -45,6 +45,7 @@ namespace ThiHuong.API
 
             services.AddDbContext<ThiHuongDbContext>(options =>
             {
+                options.UseLazyLoadingProxies();
                 options.UseSqlServer(Configuration.GetConnectionString("ThiHuongDb"));
             });
 

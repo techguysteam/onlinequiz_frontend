@@ -21,7 +21,8 @@ namespace ThiHuong.Logic.Validations
                 && IsValidOpenTimeToCreate(exam)
                 && IsValidTotalQuestion(exam)
                 && IsValidYearInExam(exam)
-                && ! stageValidation.IsPublicStage(exam.StageId);
+                && stageValidation.IsExist(exam.StageId)
+                && stageValidation.IsPendingStage(exam.StageId);
         }
 
         public bool IsValidExamToEnroll(Exam exam)
@@ -63,6 +64,17 @@ namespace ThiHuong.Logic.Validations
         public bool IsPublicExam(Exam exam)
         {
             return exam.Status.Equals(StatusConstant.PUBLIC_EXAM, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public bool IsPendingExam(object Id)
+        {
+            var exam = this.unitOfWork.ExamRepository.FindAsync(Id).Result;
+            return IsPendingExam(exam);
+        }
+
+        public bool IsPendingExam(Exam exam)
+        {
+            return exam != null && exam.Status.Equals(StatusConstant.PENDING_EXAM, StringComparison.OrdinalIgnoreCase);
         }
 
         public bool IsPublicExam(object Id)

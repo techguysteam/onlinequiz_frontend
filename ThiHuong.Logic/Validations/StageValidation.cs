@@ -28,6 +28,17 @@ namespace ThiHuong.Logic.Validations
             return false;
         }
 
+        public bool IsPendingStage(Stage stage)
+        {
+            return stage != null && stage.Status.Equals(StatusConstant.PENDING_STAGE);
+        }
+
+        public bool IsPendingStage(object stageId)
+        {
+            var stage = this.unitOfWork.StageRepository.FindAsync(stageId).Result;
+            return IsPendingStage(stage);
+        }
+
         public override bool IsActive(object Id)
         {
             throw new NotImplementedException();
