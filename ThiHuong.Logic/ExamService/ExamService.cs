@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace ThiHuong.Logic.ExamService
         Task<List<QuestionForExamination>> Enroll(int accountId, ExamEnrollmentViewModel enrollment);
         Task AddQuestionIntoExam(int examId, int questionId);
         Task RemoveQuestionFromExam(int examId, int questionId);
+
+        Task<BasePagination> GetExamPagination(int size = 10, int page = 0);
     }
 
     public class ExamService : BaseService<Exam>, IExamService
@@ -40,8 +43,8 @@ namespace ThiHuong.Logic.ExamService
         public async Task AddQuestionIntoExam(int examId, int questionId)
         {
             //exam must be PENDING
-            if (! examValidation.IsExist(examId)) throw new ThiHuongException(ErrorMessage.EXAM_NOT_FOUND);
-            if (! examValidation.IsPendingExam(examId)) throw new ThiHuongException(ErrorMessage.EXAM_NOT_IN_PENDING);
+            if (!examValidation.IsExist(examId)) throw new ThiHuongException(ErrorMessage.EXAM_NOT_FOUND);
+            if (!examValidation.IsPendingExam(examId)) throw new ThiHuongException(ErrorMessage.EXAM_NOT_IN_PENDING);
 
             //check question is valid
             var questionValidation = new QuestionValidation(this.unitOfWork);
@@ -98,7 +101,7 @@ namespace ThiHuong.Logic.ExamService
             if (!accountInStageValidation.IsAccountInStage(accountId, enrollment.ExamId))
             {
                 IAccountInStageService accountInStageService =
-                new AccountInStageService.AccountInStageService(this.unitOfWork.AccountInStageRepository, this.unitOfWork);
+                new AccountInStageService.AccountInStageService(this.unitOfWork);
                 await accountInStageService.CreateAccountEnrollmentAsync(accountId, enrollment.ExamId);
             }
 
@@ -134,10 +137,24 @@ namespace ThiHuong.Logic.ExamService
             return exam.Code;
         }
 
+        public async Task<BasePagination> GetExamPagination(int size = 10, int page = 0)
+        {
+            var exams = await this.repository.Get(null, exam => exam.OrderBy(e => e.Id)).ToListAsync();
+            var totalExam = this.repository.Get().Count();
+
+            return new BasePagination()
+            {
+                Content = exams.ToListViewModel<Exam, ExamViewModel>(),
+                Page = page,
+                Size = size,
+                Total = totalExam
+            };
+        }
+
         public async Task RemoveQuestionFromExam(int examId, int questionId)
         {
             //check if exam is public
-            if (! examValidation.IsPendingExam(examId)) throw new ThiHuongException(ErrorMessage.EXAM_NOT_IN_PENDING);
+            if (!examValidation.IsPendingExam(examId)) throw new ThiHuongException(ErrorMessage.EXAM_NOT_IN_PENDING);
 
             //check question must be in system
             var examDetailValidation = new ExamDetailValidation(this.unitOfWork);

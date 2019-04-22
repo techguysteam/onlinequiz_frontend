@@ -68,36 +68,36 @@ namespace ThiHuong.API.Controllers
 
         [HttpGet]
         [Authorize(Policy = "ADMIN")]
-        public async Task<dynamic> GetQuestion()
+        public async Task<dynamic> GetQuestion(int size = 10, int page = 0)
         {
             return await ExecuteInMonitoring(async () =>
             {
-                return await this.service.Get<QuestionViewModel>();
+                return await this.service.GetQuestionPagination(size, page);
             });
         }
 
         [HttpGet("active")]
         [Authorize(Policy = "ADMIN")]
-        public async Task<dynamic> GetActiveQuestions()
+        public async Task<dynamic> GetActiveQuestions(int size = 10, int page = 0)
         {
             return await ExecuteInMonitoring(async () =>
             {
-                return await this.service.GetActiveQuestions();
+                return await this.service.GetActiveQuestions(size, page);
             });
         }
 
         [HttpGet("{examId}")]
         [Authorize(Policy = "ADMIN")]
-        public async Task<dynamic> GetQuestionByExamId(int examId)
+        public async Task<dynamic> GetQuestionByExamId(int examId, int size = 10, int page = 0)
         {
             return await ExecuteInMonitoring(async () =>
             {
-                return await this.service.GetQuestionByExamId(examId);
+                return await this.service.GetQuestionByExamId(examId, size, page);
             });
         }
 
         //HttpPut
-        [HttpPut()]
+        [HttpPut]
         [Authorize(Policy = "ADMIN")]
         public async Task<dynamic> UpdateQuestion([FromForm]QuestionViewModel question)
         {

@@ -15,7 +15,7 @@ namespace ThiHuong.Logic.Validations
 
         public bool IsPublicStage(Stage stage)
         {
-            return stage != null && stage.Status.Equals(StatusConstant.PUBLIC_STAGE, StringComparison.OrdinalIgnoreCase) && stage.EndDate != null;
+            return stage != null && stage.Status.Equals(StatusConstant.PUBLIC_STAGE, StringComparison.OrdinalIgnoreCase) && stage.EndDate == null;
         }
 
         public bool IsPublicStage(int? stageId)

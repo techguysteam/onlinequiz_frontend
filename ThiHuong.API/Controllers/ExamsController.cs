@@ -15,7 +15,6 @@ using ThiHuong.Logic.ExamService;
 namespace ThiHuong.API.Controllers
 {
     [ApiController]
-    
     public class ExamController : ThiHuongController
     {
         private IExamService service;
@@ -78,5 +77,14 @@ namespace ThiHuong.API.Controllers
             });
         }
 
+        [HttpGet]
+        [Authorize(Policy = "ADMIN")]
+        public async Task<dynamic> GetExamPagination(int size = 10, int page = 0)
+        {
+            return await ExecuteInMonitoring(async () =>
+            {
+                return await this.service.GetExamPagination(size, page);
+            });
+        }
     }
 }

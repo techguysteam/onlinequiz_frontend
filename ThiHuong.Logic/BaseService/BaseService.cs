@@ -11,7 +11,7 @@ using ThiHuong.Logic.BaseRepository;
 
 namespace ThiHuong.Logic.BaseService
 {
-    public interface IBaseService<TEntity> where TEntity: BaseEntity
+    public interface IBaseService<TEntity> where TEntity : BaseEntity
     {
         Task Add(TEntity entity);
         void Delete(TEntity entity);
@@ -20,9 +20,10 @@ namespace ThiHuong.Logic.BaseService
         Task<List<TResult>> Get<TResult>(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "") where TResult : BaseViewModel;
+
     }
 
-    public class BaseService<TEntity> : IBaseService<TEntity> where TEntity: BaseEntity
+    public class BaseService<TEntity> : IBaseService<TEntity> where TEntity : BaseEntity
     {
         protected IBaseRepository<TEntity> repository;
         protected UnitOfWork unitOfWork;
@@ -48,12 +49,14 @@ namespace ThiHuong.Logic.BaseService
             return await this.repository.FindAsync(Id);
         }
 
-        public async Task<List<TResult>> Get<TResult>(Expression<Func<TEntity, bool>> filter = null, 
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, 
+        public async Task<List<TResult>> Get<TResult>(Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "")
             where TResult : BaseViewModel
         {
-            var entityResult = await this.repository.Get(filter, orderBy, includeProperties).ToListAsync();
+            var entityResult = await this.repository.Get(filter, orderBy, includeProperties)
+                                                    .ToListAsync();
+
             return entityResult.ToListViewModel<TEntity, TResult>();
         }
 

@@ -26,6 +26,7 @@ using ThiHuong.Logic.ExamService;
 using ThiHuong.Framework.ViewModels.EntityViewModel;
 using ThiHuong.Logic;
 using Swashbuckle.AspNetCore.Swagger;
+using ThiHuong.Logic.AccountInStageService;
 
 namespace ThiHuong.API
 {
@@ -105,6 +106,10 @@ namespace ThiHuong.API
                 cfg.CreateMap<SubmitAnswerViewModel, ResultDetail>();
                 cfg.CreateMap<ResultDetail, SubmitAnswerViewModel>();
 
+                cfg.CreateMap<Account, HallOfFameViewModel>();
+
+                cfg.CreateMap<Question, ResultDetailForReview>();
+
             });
 
         }
@@ -123,7 +128,10 @@ namespace ThiHuong.API
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<IExamService, ExamService>();
             services.AddScoped<IResultDetailService, ResultDetailService>();
+            services.AddScoped<IAccountInStageService, AccountInStageService>();
             services.AddScoped<UnitOfWork>();
+
+
 
         }
 

@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[AccountInStage] (
     [Id]         INT      IDENTITY (1, 1) NOT NULL,
     [AccountId]  INT      NOT NULL,
-    [ExamId]     INT      NULL,
+    [ExamId]     INT      NOT NULL,
     [Rank]       INT      NULL,
     [StartTime]  DATETIME NULL,
     [FinishTime] DATETIME NULL,
@@ -11,6 +11,8 @@
     CONSTRAINT [FK_AccountInStage_Exam] FOREIGN KEY ([ExamId]) REFERENCES [dbo].[Exam] ([Id]),
     CONSTRAINT [IX_AccountInStage] UNIQUE NONCLUSTERED ([AccountId] ASC, [ExamId] ASC)
 );
+
+
 
 
 

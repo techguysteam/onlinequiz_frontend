@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ThiHuong.Framework;
 using ThiHuong.Framework.Constants;
 using ThiHuong.Framework.Models;
+using ThiHuong.Framework.ViewModels;
 using ThiHuong.Framework.ViewModels.EntityViewModel;
 using ThiHuong.Logic.BaseRepository;
 using ThiHuong.Logic.BaseService;
@@ -19,8 +20,9 @@ namespace ThiHuong.Logic.QuestionService
     public interface IQuestionService : IBaseService<Question>
     {
         Task<QuestionViewModel> CreateQuestionAsync(QuestionViewModel question, IFormFile file, string pathInServer);
-        Task<List<QuestionViewModel>> GetQuestionByExamId(int examId);
-        Task<List<QuestionViewModel>> GetActiveQuestions();
+        Task<BasePagination> GetQuestionByExamId(int examId, int size = 10, int page = 0);
+        Task<BasePagination> GetActiveQuestions(int size, int page);
+        Task<BasePagination> GetQuestionPagination(int size = 10, int page = 0);
         Task Deactivate(int questionId);
         Task Activate(int questionId);
         Task DeletePermanently(int questionId);
@@ -92,15 +94,26 @@ namespace ThiHuong.Logic.QuestionService
             }
         }
 
-        public async Task<List<QuestionViewModel>> GetActiveQuestions()
+        public async Task<BasePagination> GetActiveQuestions(int size, int page)
         {
-            var questions = await this.repository.Get(q => q.IsActive == null || q.IsActive.Value)
+            var questions = await this.repository.Get(q => q.IsActive == null || q.IsActive.Value,
+                                                                qs => qs.OrderBy(q => q.Id))
+                                                 .Skip(size * page)
+                                                 .Take(size)
                                                  .ToListAsync();
-            return questions.ToListViewModel<Question, QuestionViewModel>();
+            var totalQuestion = this.repository.Get(q => q.IsActive == null || q.IsActive.Value).Count();
+
+            return new BasePagination()
+            {
+                Content = questions.ToListViewModel<Question, QuestionViewModel>(),
+                Page = page,
+                Size = size,
+                Total = totalQuestion
+            };
 
         }
 
-        public async Task<List<QuestionViewModel>> GetQuestionByExamId(int examId)
+        public async Task<BasePagination> GetQuestionByExamId(int examId, int size = 10, int page = 0)
         {
             //valid exam
             var examValidation = new ExamValidation(this.unitOfWork);
@@ -109,7 +122,14 @@ namespace ThiHuong.Logic.QuestionService
             var questionIdsContainInExamId = unitOfWork.ExamDetailRepository.Get(ed => ed.ExamId == examId)
                                                        .Select(ed => ed.QuestionId);
             var entityResult = await this.repository.Get(q => questionIdsContainInExamId.Contains(q.Id)).ToListAsync();
-            return entityResult.ToListViewModel<Question, QuestionViewModel>();
+
+            return new BasePagination()
+            {
+                Content = entityResult.ToListViewModel<Question, QuestionViewModel>(),
+                Page = page,
+                Size = size,
+                Total = questionIdsContainInExamId.Count()
+            };
         }
 
         public async Task<QuestionViewModel> UpdateQuestion(QuestionViewModel questionViewModel, IFormFile file, string pathInServerWithoutHost)
@@ -174,6 +194,23 @@ namespace ThiHuong.Logic.QuestionService
             }
             question.IsActive = true;
             return question;
+        }
+
+        public async Task<BasePagination> GetQuestionPagination(int size = 10, int page = 0)
+        {
+            var questions = await this.repository.Get()
+                                                 .Skip(size * page)
+                                                 .Take(size)
+                                                 .ToListAsync();
+            var totalQuestion = this.repository.Get().Count();
+            return new BasePagination()
+            {
+                Content = questions,
+                Page = page,
+                Size = size,
+                Total = totalQuestion
+            };
+
         }
 
 

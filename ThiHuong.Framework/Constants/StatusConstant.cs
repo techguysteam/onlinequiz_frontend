@@ -46,6 +46,7 @@ namespace ThiHuong.Framework.Constants
         //exam
         public const string EXAM_NOT_FOUND = "Exam not found";
         public const string EXAM_ALREADY_TAKEN = "You have already taken this exam";
+        public const string EXAM_NOT_TAKEN = "You did not complete this exam";
         public const string EXAM_NOT_PUBLIC = "Exam is not openned";
         public const string EXAM_NOT_IN_PENDING = "Exam is already openned so you cannot edit";
         public const string EXAM_INVALID_TO_CREATE = "The exam is not valid to create";
@@ -64,6 +65,10 @@ namespace ThiHuong.Framework.Constants
 
         //account in stage
         public const string ACCOUNT_IN_STAGE_ALREADY_EXIST = "This account already exist";
+
+        //stage
+        public const string STAGE_NOT_PUBLIC = "This stage is not public";
+        public const string STAGE_NOT_EXIST = "This stage is not exist";
     }
 }
 

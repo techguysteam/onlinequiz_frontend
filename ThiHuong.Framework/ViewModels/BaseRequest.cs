@@ -15,5 +15,6 @@ namespace ThiHuong.Framework.ViewModels
         public int Total { get; set; } // total record
         public int Size { get; set; } //record per page
         public int Page { get; set; } // page number
+        public dynamic Content { get; set; }
     }
 }

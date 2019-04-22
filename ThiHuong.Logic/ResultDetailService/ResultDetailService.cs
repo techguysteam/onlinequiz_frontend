@@ -16,6 +16,7 @@ namespace ThiHuong.Logic
     {
         Task SubmitAnswerPartialAsync(List<SubmitAnswerViewModel> answers, int accountId, int examId);
         Task CalculatePoint(int accountId, int examId);
+
     }
 
     public class ResultDetailService : BaseService<ResultDetail>, IResultDetailService
@@ -66,6 +67,8 @@ namespace ThiHuong.Logic
             await this.unitOfWork.SaveChangesAsync();
 
         }
+
+        
 
         public async Task SubmitAnswerPartialAsync(List<SubmitAnswerViewModel> answers, int accountId, int examId)
         {
