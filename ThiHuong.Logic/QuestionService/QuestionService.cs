@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ThiHuong.Framework;
+using ThiHuong.Framework.AutoMapper;
 using ThiHuong.Framework.Constants;
 using ThiHuong.Framework.Models;
 using ThiHuong.Framework.ViewModels;
@@ -105,7 +106,7 @@ namespace ThiHuong.Logic.QuestionService
 
             return new BasePagination()
             {
-                Content = questions.ToListViewModel<Question, QuestionViewModel>(),
+                Content = questions.ToListViewModel<QuestionViewModel>(),
                 Page = page,
                 Size = size,
                 Total = totalQuestion
@@ -125,7 +126,7 @@ namespace ThiHuong.Logic.QuestionService
 
             return new BasePagination()
             {
-                Content = entityResult.ToListViewModel<Question, QuestionViewModel>(),
+                Content = entityResult.ToListViewModel<QuestionViewModel>(),
                 Page = page,
                 Size = size,
                 Total = questionIdsContainInExamId.Count()
@@ -205,7 +206,7 @@ namespace ThiHuong.Logic.QuestionService
             var totalQuestion = this.repository.Get().Count();
             return new BasePagination()
             {
-                Content = questions,
+                Content = questions.ToListViewModel<QuestionViewModel>(),
                 Page = page,
                 Size = size,
                 Total = totalQuestion

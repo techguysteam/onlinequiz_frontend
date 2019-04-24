@@ -57,7 +57,7 @@ namespace ThiHuong.Logic.BaseService
             var entityResult = await this.repository.Get(filter, orderBy, includeProperties)
                                                     .ToListAsync();
 
-            return entityResult.ToListViewModel<TEntity, TResult>();
+            return entityResult.ToListViewModel<TResult>();
         }
 
         public void Update(TEntity entity, TEntity updatedEntity)

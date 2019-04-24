@@ -11,6 +11,7 @@ using ThiHuong.Logic.BaseService;
 using ThiHuong.Framework.Constants;
 using ThiHuong.Logic;
 using ThiHuong.Logic.Validations;
+using ThiHuong.Framework.AutoMapper;
 
 namespace ThiHuong.Service
 {

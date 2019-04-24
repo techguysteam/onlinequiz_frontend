@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ThiHuong.Framework;
+using ThiHuong.Framework.AutoMapper;
 using ThiHuong.Framework.Constants;
 using ThiHuong.Framework.Helpers;
 using ThiHuong.Framework.Models;
@@ -113,7 +114,7 @@ namespace ThiHuong.Logic.ExamService
 
             //Get question by exam
             var questions = exam.ExamDetail.Select(ed => ed.Question).ToList()
-                                           .ToListViewModel<Question, QuestionForExamination>();
+                                           .ToListViewModel<QuestionForExamination>();
             return questions;
         }
 
@@ -144,7 +145,7 @@ namespace ThiHuong.Logic.ExamService
 
             return new BasePagination()
             {
-                Content = exams.ToListViewModel<Exam, ExamViewModel>(),
+                Content = exams.ToListViewModel<ExamViewModel>(),
                 Page = page,
                 Size = size,
                 Total = totalExam

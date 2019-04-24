@@ -10,7 +10,6 @@ namespace ThiHuong.Framework.Models
             Account = new HashSet<Account>();
         }
 
-        public int Id { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<Account> Account { get; set; }

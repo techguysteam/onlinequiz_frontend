@@ -81,7 +81,7 @@ namespace ThiHuong.Logic
             if (answers == null || answers.Count <= 0) throw new ThiHuongException("No answer");
 
             answers.ForEach(a => a.AccountId = accountId);
-            var resultDetails = answers.ToListEntity<SubmitAnswerViewModel, ResultDetail>();
+            var resultDetails = answers.ToListEntity<ResultDetail>();
 
            
 

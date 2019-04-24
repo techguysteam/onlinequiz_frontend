@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ThiHuong.Framework.Models;
 using ThiHuong.Framework.ViewModels;
+using ThiHuong.Framework.AutoMapper;
 
 namespace ThiHuong.Framework.Helpers
 {
@@ -33,15 +34,13 @@ namespace ThiHuong.Framework
 {
     public static class EntitiesToViewModelsMapping
     {
-        public static List<TDest> ToListViewModel<TSource, TDest>(this IEnumerable<TSource> entities)
+        public static List<TDest> ToListViewModel<TDest>(this IEnumerable<BaseEntity> entities)
             where TDest : BaseViewModel
-            where TSource : BaseEntity
         {
             return entities.Select(e => e.ToViewModel<TDest>()).ToList();
         }
 
-        public static List<TDest> ToListEntity<TSource, TDest>(this IEnumerable<TSource> entities)
-            where TSource : BaseViewModel
+        public static List<TDest> ToListEntity<TDest>(this IEnumerable<BaseViewModel> entities)
             where TDest : BaseEntity
         {
             return entities.Select(e => e.ToEntity<TDest>()).ToList();

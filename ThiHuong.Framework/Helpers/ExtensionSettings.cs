@@ -10,7 +10,7 @@ namespace ThiHuong.Framework.Helpers
     {
         public IConfiguration configuration { get; private set; }
 
-        public AppSettings appSettings
+        public AppSettings AppSettings
         {
             get
             {

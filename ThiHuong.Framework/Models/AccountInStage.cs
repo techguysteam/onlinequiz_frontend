@@ -10,7 +10,6 @@ namespace ThiHuong.Framework.Models
             ResultDetail = new HashSet<ResultDetail>();
         }
 
-        public int Id { get; set; }
         public int AccountId { get; set; }
         public int ExamId { get; set; }
         public int? Rank { get; set; }

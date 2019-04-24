@@ -10,7 +10,6 @@ namespace ThiHuong.Framework.Models
             AccountInStage = new HashSet<AccountInStage>();
         }
 
-        public int Id { get; set; }
         public string Username { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }

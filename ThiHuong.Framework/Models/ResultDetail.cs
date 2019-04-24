@@ -5,7 +5,6 @@ namespace ThiHuong.Framework.Models
 {
     public partial class ResultDetail
     {
-        public int Id { get; set; }
         public int AccountInStageId { get; set; }
         public int? QuestionId { get; set; }
         public string Choice { get; set; }

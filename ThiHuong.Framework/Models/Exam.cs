@@ -11,7 +11,6 @@ namespace ThiHuong.Framework.Models
             ExamDetail = new HashSet<ExamDetail>();
         }
 
-        public int Id { get; set; }
         public int? Duration { get; set; }
         public int? TotalQuestion { get; set; }
         public string Status { get; set; }

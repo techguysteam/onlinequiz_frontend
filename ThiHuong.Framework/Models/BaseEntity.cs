@@ -10,16 +10,7 @@ namespace ThiHuong.Framework.Models
 {
     public class BaseEntity
     {
-        protected IMapper mapper {
-            get {
-                return AutoMapperConfiguration.GetInstance();
-            }
-        }
-
-        public TDestination ToViewModel<TDestination>() where TDestination : BaseViewModel
-        {
-            return mapper.Map<TDestination>(this);
-        }
+        public int Id { get; set; }
 
     }
 }

@@ -55,6 +55,8 @@ namespace ThiHuong.API
                 c.SwaggerDoc("v1", new Info { Title = "ThiHuong API", Version = "v1" });
             });
 
+            services.AddDefaultIdentity<Account>().AddRoles<Role>().AddEntityFrameworkStores<ThiHuongDbContext>();
+
             SetupAuthentication(services);
             SetupAuthorization(services);
             SetupAutoMapper();
@@ -176,6 +178,7 @@ namespace ThiHuong.API
                     policy.RequireAuthenticatedUser();
                     policy.AuthenticationSchemes = new List<string> { JwtBearerDefaults.AuthenticationScheme };
                     policy.RequireClaim(ClaimTypes.Roles, "USER");
+                    
                 });
             });
 

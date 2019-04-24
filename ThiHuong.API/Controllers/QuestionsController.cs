@@ -38,7 +38,7 @@ namespace ThiHuong.API.Controllers
             }
             return await ExecuteInMonitoring(async () =>
             {
-                return await this.service.CreateQuestionAsync(question, file, this.extensionSettings.appSettings.SaveDirectory);
+                return await this.service.CreateQuestionAsync(question, file, this.extensionSettings.AppSettings.SaveDirectory);
             });
         }
 
@@ -67,7 +67,8 @@ namespace ThiHuong.API.Controllers
         //HttpGet
 
         [HttpGet]
-        [Authorize(Policy = "ADMIN")]
+        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Admin")]
         public async Task<dynamic> GetQuestion(int size = 10, int page = 0)
         {
             return await ExecuteInMonitoring(async () =>
@@ -108,7 +109,7 @@ namespace ThiHuong.API.Controllers
             }
             return await ExecuteInMonitoring(async () =>
             {
-                var result = await this.service.UpdateQuestion(question, file, this.extensionSettings.appSettings.SaveDirectory);
+                var result = await this.service.UpdateQuestion(question, file, this.extensionSettings.AppSettings.SaveDirectory);
                 return result;
             });
         }

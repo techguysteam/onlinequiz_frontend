@@ -24,7 +24,7 @@ namespace ThiHuong.Framework.Helpers
         {
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(extensionSettings.appSettings.SecretKey);
+            var key = Encoding.UTF8.GetBytes(extensionSettings.AppSettings.SecretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -34,7 +34,7 @@ namespace ThiHuong.Framework.Helpers
                     new Claim(ClaimTypes.Roles, user.Role.Name),
                 }),
 
-                Expires = DateTime.UtcNow.AddHours(extensionSettings.appSettings.TokenExpireTime),
+                Expires = DateTime.UtcNow.AddHours(extensionSettings.AppSettings.TokenExpireTime),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
 

@@ -11,17 +11,6 @@ namespace ThiHuong.Framework.ViewModels
     public partial class BaseViewModel
     {
         
-
-        protected IMapper mapper {
-            get {
-                return AutoMapperConfiguration.GetInstance();
-            }
-        }
-
-        public TDestination ToEntity<TDestination>() where TDestination : BaseEntity
-        {
-            return mapper.Map<TDestination>(this);
-        }
     }
 
 }
